@@ -246,15 +246,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1989090933}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d96d1ac637e5cbc4ab8bbaffb4b82e66, type: 3}
+  m_Script: {fileID: 11500000, guid: 04fe00f16976278418ccf88b9c58809d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   xSpeed: 10
-  ySpeed: 0
-  fallSpeed: 2
+  ySpeed: 5
   collisionMask:
     serializedVersion: 2
     m_Bits: 4294967039
+  maxJumpTimer: 30
+  maxProlongJumpTimer: 30
 --- !u!212 &1989090935
 SpriteRenderer:
   m_ObjectHideFlags: 0

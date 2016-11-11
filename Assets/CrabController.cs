@@ -3,12 +3,18 @@ using System.Collections;
 
 public class CrabController : MonoBehaviour {
 
-    public float xSpeed = 10f, ySpeed;
-    public float fallSpeed = 5f;
+    public float xSpeed = 10f, ySpeed = 5f;
     public LayerMask collisionMask;
     private float radius;
-    private bool isJumping = false;
-    private int jumpTimer = 0;
+
+    // ----- JUMP RELATED VARIABLES -----
+
+    private bool isJumping = false; // Is the crab currently rising from the jump?
+    private int jumpTimer = 0; // The time until the crab starts falling after a jump
+    public int maxJumpTimer = 5; // The maximum number of ticks that the crab will jump for (not prolonged)
+    private bool hasJumped; 
+    private int prolongJumpTimer = 0; // When holding down jump button, jump further 
+    public int maxProlongJumpTimer = 30; // Maximum number of ticks that the jump can be prolonged for
 
     void Start() {
         // Assuming that the object is circular -> same scale for x and y
@@ -30,55 +36,52 @@ public class CrabController : MonoBehaviour {
                 transform.Translate(-1 * xSpeed * Time.deltaTime, 0, 0);
             }
         }
-
         // Jump
         if (Input.GetKey(KeyCode.UpArrow)) {
             if (!isJumping && OnGround()) {
                 isJumping = true;
-                jumpTimer = 100;
+                jumpTimer = maxJumpTimer;
             }
         }
-
         // Check if jumping - if not, fall if not standing on ground
         if (!isJumping) {
             Vector2 down = transform.TransformDirection(Vector2.down);
             // Raycast down from the bottom of the sprite
-            RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - radius), 
-                down, fallSpeed * Time.deltaTime, collisionMask);
+            RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - radius),
+                down, ySpeed * Time.deltaTime, collisionMask);
             if (!hitInfo) {
-                transform.Translate(0, -1 * fallSpeed * Time.deltaTime, 0);
+                transform.Translate(0, -1 * ySpeed * Time.deltaTime, 0);
             } else {
                 transform.Translate(0, -1 * (hitInfo.distance) * Time.deltaTime, 0);
             }
         } else {
             Vector2 up = transform.TransformDirection(Vector2.up);
             // Raycast up from the top of the sprite
-            RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + radius), 
-                up, fallSpeed * Time.deltaTime, collisionMask);
+            RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + radius),
+                up, ySpeed * Time.deltaTime, collisionMask);
             if (!hitInfo) {
-                transform.Translate(0, fallSpeed * Time.deltaTime, 0);
+                transform.Translate(0, ySpeed * Time.deltaTime, 0);
             } else {
                 transform.Translate(0, (hitInfo.distance) * Time.deltaTime, 0);
+                jumpTimer = 0; // If hit something above, stop ascending. isJump is set to false after else case 
             }
             // Count down jump timer
             jumpTimer--;
             // Stop jumping?
-            if (jumpTimer == 0) {
+            if (jumpTimer <= 0) {
                 isJumping = false;
             }
         }
-        
     }
-    // THIS DOES NOT WORK AT ALL
+
+    /**
+     * Raycasts a short distance straight down. If hit, return true, else return false.
+     */
     private bool OnGround() {
         Vector2 down = transform.TransformDirection(Vector2.down);
-        // Raycast down from the bottom of the sprite
+        // Raycast a very small distance straight down from the bottom of the sprite (to compensate for small errors)
         RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - radius),
-            down, fallSpeed * Time.deltaTime, collisionMask);
-        Debug.Log(hitInfo.distance);
-        return hitInfo.distance == 0;
-
-
-       
+            down, 0.065f, collisionMask);
+        return hitInfo;
     }
 }
