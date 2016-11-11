@@ -6,7 +6,7 @@
 /// When swapping scene, call BeginFade and then 
 /// swap scene after the time returned
 /// </summary>
-public class SceneFading : MonoBehaviour {
+public class SceneFader : MonoBehaviour {
 
     public Texture fadeOutTexture;
     public float fadeTime;
