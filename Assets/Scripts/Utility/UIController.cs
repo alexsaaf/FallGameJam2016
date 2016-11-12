@@ -13,15 +13,13 @@ public class UIController : MonoBehaviour {
 	void Start () {
         //Get the characters
         crab = GameObject.Find("CrabCharacter").GetComponent<CrabController>();
-        //duck = GameObject.Find("Duck").GetComponent<DuckController>();
+        duck = GameObject.Find("Duck").GetComponent<DuckController>();
         
-        //Find the duckHealth images
-        //This must be uncommented when there is a duck prefab =)
-        /*
+        //Find the duckHealth images  
         duckHealth1 = transform.GetChild(0).GetChild(1).GetComponent<Image>();
         duckHealth2 = transform.GetChild(0).GetChild(3).GetComponent<Image>();
         duckHealth3 = transform.GetChild(0).GetChild(5).GetComponent<Image>();
-        */
+        
            
         //Find the crabhealth images
         crabHealth1 = transform.GetChild(1).GetChild(1).GetComponent<Image>();
@@ -32,7 +30,7 @@ public class UIController : MonoBehaviour {
     }
 
 	void Update () {
-        //UpdateDuckHealth();
+        UpdateDuckHealth();
         UpdateCrabHealth();
         UpdateTimer();
 	}
@@ -46,7 +44,7 @@ public class UIController : MonoBehaviour {
     //This is very ugly code... but hey, #GameJam!
     void UpdateDuckHealth() {
         //Replace with the actual health later
-        int health = 2;
+        int health = duck.numLives;
         Color color = duckHealth1.color;
         //Set the visible health symbols accordingly to the health
         switch (health) {

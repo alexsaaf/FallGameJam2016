@@ -84,7 +84,11 @@ public class GameManager : MonoBehaviour {
 
     void OnLevelWasLoaded() {
         startTime = Time.time;
-        LevelInfo info = GameObject.Find("LevelInfo").GetComponent<LevelInfo>();
+        GameObject levelInfoObject = GameObject.Find("LevelInfo");
+        LevelInfo info = null;
+        if(levelInfoObject != null) {
+            info = levelInfoObject.GetComponent<LevelInfo>();
+        }
         //Log if there is no levelinfo. Not necessarily a problem.
         if(info == null) {
             Debug.Log("There is no levelinfo in this level!");
