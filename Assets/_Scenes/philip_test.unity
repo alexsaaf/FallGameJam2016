@@ -806,17 +806,7 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1000010621647186, guid: 75793e432e67fa845a9d3dfcd4bdf70a, type: 2}
-      propertyPath: m_TagString
-      value: Duck
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000010325840494, guid: 75793e432e67fa845a9d3dfcd4bdf70a,
-        type: 2}
-      propertyPath: numLives
-      value: 3
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 212000010772035338, guid: 75793e432e67fa845a9d3dfcd4bdf70a, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 75793e432e67fa845a9d3dfcd4bdf70a, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1790708898
@@ -938,61 +928,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8a8f697b189fe1a49bb75484cdabfb39, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1878644868 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1000010621647186, guid: 75793e432e67fa845a9d3dfcd4bdf70a,
-    type: 2}
-  m_PrefabInternal: {fileID: 1731282323}
---- !u!95 &1878644872
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1878644868}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 25c4be4897564424988e9421064b883b, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
---- !u!212 &1878644874
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1878644868}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_SelectedWireframeHidden: 1
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a98ae1b5c16d2e54ca0912ac26fd7707, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
 --- !u!1 &2104372056
 GameObject:
   m_ObjectHideFlags: 0

@@ -231,7 +231,9 @@ public class DuckController : MonoBehaviour, IDamageable {
                 keepDiving = true;
                 if (!inDiving) {
                     StartCoroutine(DivingRoutine(diveDepth,new Vector3((float)horizontalSpeed,(float)verticalSpeed,0)));
-                    animator.SetBool("isDiving", true);
+                    if (animator != null) {
+                        animator.SetBool("isDiving", true);
+                    }
                     inDiving = true;
                 }
             }
@@ -250,7 +252,9 @@ public class DuckController : MonoBehaviour, IDamageable {
         }
         else {
             if (Input.GetAxisRaw("Fire1")  <= 0) {
-                animator.SetBool("isDiving", false);
+                if (animator != null) {
+                    animator.SetBool("isDiving", false); 
+                }
                 keepDiving = false;
             }
         }
@@ -324,6 +328,7 @@ public class DuckController : MonoBehaviour, IDamageable {
             yield return  null;
         }
         if (collider.bounds.min.y < seaLevel) {
+            animator.SetBool("isDiving", false);
             rising = true;
             for (int i = 0; i < downTime; i++) {
                 transform.Translate(CalculateMoveVectorCollision(3, RayDirectionSearch.RIGHT, collider.bounds, 0, diveSpeed.x, transform));
