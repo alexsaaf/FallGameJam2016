@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CrabController : MonoBehaviour {
+public class CrabController : MonoBehaviour, IDamageable {
 
     public float xSpeed = 10f, ySpeed = 5f;
     public LayerMask collisionMask;
     private float radius;
-    public int numLives;
+    public int numLives = 3;
     public int maxLives;
+    private int invincibilityTimer;
+    private int maxInvincibilityFrames = 20;
 
     // ----- JUMP RELATED VARIABLES -----
     private bool isJumping = false; // Is the crab currently rising from the jump?
@@ -41,6 +43,10 @@ public class CrabController : MonoBehaviour {
                 transform.Translate(-1 * xSpeed * Time.deltaTime, 0, 0);
             } else {
                 transform.Translate(-1 * hitInfo.distance * Time.deltaTime, 0, 0);
+                // If colliding with an enemy
+                if (hitInfo.collider.tag == "Enemy") {
+                    TakeDamage(1);
+                }
             }
         }
         // Jump
@@ -89,6 +95,10 @@ public class CrabController : MonoBehaviour {
                 isJumping = false;
             }
         }
+
+        if (invincibilityTimer > 0) {
+            invincibilityTimer--;
+        }
     }
 
     /**
@@ -100,5 +110,16 @@ public class CrabController : MonoBehaviour {
         RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - radius),
             down, 0.065f, collisionMask);
         return hitInfo;
+    }
+
+    public void TakeDamage(int damage) {
+        Debug.Log("Damage taken! " + damage);
+        if (invincibilityTimer <= 0) {
+            numLives--;
+            invincibilityTimer = maxInvincibilityFrames;
+        }
+        if (numLives <= 0) {
+            GameManager.instance.Died(true);
+        }
     }
 }
