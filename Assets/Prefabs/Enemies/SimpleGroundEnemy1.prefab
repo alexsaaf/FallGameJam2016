@@ -9,45 +9,45 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1000014100297030}
+  m_RootGameObject: {fileID: 1000013710621782}
   m_IsPrefabParent: 1
---- !u!1 &1000014100297030
+--- !u!1 &1000013710621782
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 4000011339357722}
-  - 212: {fileID: 212000010819612810}
-  - 114: {fileID: 114000012271772168}
-  - 58: {fileID: 58000012821226110}
-  m_Layer: 8
-  m_Name: CrabCharacter
-  m_TagString: Crab
+  - 4: {fileID: 4000010368274504}
+  - 212: {fileID: 212000012593857010}
+  - 61: {fileID: 61000012233079434}
+  - 114: {fileID: 114000010056803212}
+  m_Layer: 10
+  m_Name: SimpleGroundEnemy1
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4000011339357722
+--- !u!4 &4000010368274504
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000014100297030}
+  m_GameObject: {fileID: 1000013710621782}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalPosition: {x: 1.974, y: -2.278, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!58 &58000012821226110
-CircleCollider2D:
+--- !u!61 &61000012233079434
+BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000014100297030}
+  m_GameObject: {fileID: 1000013710621782}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -55,33 +55,30 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.1
---- !u!114 &114000012271772168
+  m_Size: {x: 0.14, y: 0.14}
+--- !u!114 &114000010056803212
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000014100297030}
+  m_GameObject: {fileID: 1000013710621782}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04fe00f16976278418ccf88b9c58809d, type: 3}
+  m_Script: {fileID: 11500000, guid: b3c7531655c65e14cb9f41b226d2cac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSpeed: 10
-  ySpeed: 10
+  damage: 1
+  xSpeed: 5
   collisionMask:
     serializedVersion: 2
-    m_Bits: 4294967039
-  numLives: 0
-  maxLives: 0
-  minJumpDuration: 7
-  maxJumpDuration: 30
---- !u!212 &212000010819612810
+    m_Bits: 4294966271
+  xRaycastMargin: 0.6
+--- !u!212 &212000012593857010
 SpriteRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000014100297030}
+  m_GameObject: {fileID: 1000013710621782}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -105,7 +102,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0.7794118, g: 0.17192905, b: 0.17192905, a: 1}
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Color: {r: 0.15792602, g: 0.64486873, b: 0.9338235, a: 1}
   m_FlipX: 0
   m_FlipY: 0
