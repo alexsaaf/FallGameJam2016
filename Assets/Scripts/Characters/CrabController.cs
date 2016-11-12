@@ -6,6 +6,8 @@ public class CrabController : MonoBehaviour {
     public float xSpeed = 10f, ySpeed = 5f;
     public LayerMask collisionMask;
     private float radius;
+    public int numLives;
+    public int maxLives;
 
     // ----- JUMP RELATED VARIABLES -----
     private bool isJumping = false; // Is the crab currently rising from the jump?
