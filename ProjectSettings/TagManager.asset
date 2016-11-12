@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Crab
   - Enemy
+  - crab
   layers:
   - Default
   - TransparentFX
@@ -42,4 +43,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: One
+    uniqueID: 2560853913
+    locked: 0
+  - name: Two
+    uniqueID: 1373987281
     locked: 0
