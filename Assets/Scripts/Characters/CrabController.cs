@@ -5,7 +5,7 @@ public class CrabController : MonoBehaviour, IDamageable {
 
     public float xSpeed = 10f, ySpeed = 5f;
     public LayerMask collisionMask;
-    private float width, height;
+    private float width, height; // The width/height of the BoxCollider2D
     public int numLives = 3;
     public int maxLives;
     private int invincibilityTimer;
@@ -24,13 +24,15 @@ public class CrabController : MonoBehaviour, IDamageable {
     }
 	
 	void Update () {
-
+        // Move left or right
         if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)) {
+            // Set direction depending on left or right
             if (Input.GetKey(KeyCode.RightArrow)) xDirection = 1;
             if (Input.GetKey(KeyCode.LeftArrow)) xDirection = -1;
             // Directional vector
             Vector2 dir = transform.TransformDirection(Vector2.right) * xDirection;
             float rayOriginX = transform.position.x + (width / 2) * xDirection;
+            // Raycast to from corners to left or right, depending on the value of xDirection
             RaycastHit2D hitInfoTop = Physics2D.Raycast(new Vector2(rayOriginX, transform.position.y + height / 2),
                 dir, xSpeed * Time.deltaTime, collisionMask);
             RaycastHit2D hitInfoBottom = Physics2D.Raycast(new Vector2(rayOriginX, transform.position.y - height / 2),
@@ -43,42 +45,9 @@ public class CrabController : MonoBehaviour, IDamageable {
             } else {
                 moveDistance = xSpeed * Time.deltaTime;
             }
+            // Move
             transform.Translate(xDirection * moveDistance, 0, 0);
         }
-
-        // Move right
-	    //if (Input.GetKey(KeyCode.RightArrow)) {
-     //       Vector2 right = transform.TransformDirection(Vector2.right);
-     //       float rayOriginX = transform.position.x + (width / 2);
-     //       RaycastHit2D hitInfoTop = Physics2D.Raycast(new Vector2(rayOriginX, transform.position.y + height / 2), 
-     //           right, xSpeed * Time.deltaTime, collisionMask);
-     //       RaycastHit2D hitInfoBottom = Physics2D.Raycast(new Vector2(rayOriginX, transform.position.y - height / 2),
-     //           right, xSpeed * Time.deltaTime, collisionMask);
-     //       float moveDistance = 0;
-     //       if (hitInfoBottom) {
-     //           moveDistance = hitInfoBottom.distance * Time.deltaTime;
-     //       } else if (hitInfoTop) {
-     //           moveDistance = hitInfoTop.distance * Time.deltaTime;
-     //       } else {
-     //           moveDistance = xSpeed * Time.deltaTime;
-     //       }
-     //       transform.Translate(moveDistance, 0, 0);
-     //   }
-     //   // Move left
-     //   if (Input.GetKey(KeyCode.LeftArrow)) {
-     //       Vector2 left = transform.TransformDirection(Vector2.left);
-     //       RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x - width / 2, transform.position.y),
-     //           left, xSpeed * Time.deltaTime, collisionMask);
-     //       if (!hitInfo) {
-     //           transform.Translate(-1 * xSpeed * Time.deltaTime, 0, 0);
-     //       } else {
-     //           transform.Translate(-1 * hitInfo.distance * Time.deltaTime, 0, 0);
-     //           // If colliding with an enemy
-     //           if (hitInfo.collider.tag == "Enemy") {
-     //               TakeDamage(1);
-     //           }
-     //       }
-     //   }
         // Jump
         if (Input.GetKey(KeyCode.UpArrow)) {
             if (!isJumping && OnGround()) {
@@ -134,13 +103,6 @@ public class CrabController : MonoBehaviour, IDamageable {
             }
             transform.Translate(0, moveDistance, 0);
 
-
-            //if (!hitInfo) {
-            //    transform.Translate(0, ySpeed * Time.deltaTime, 0);
-            //} else {
-            //    transform.Translate(0, hitInfo.distance * Time.deltaTime, 0);
-            //    jumpTimer = 0; // If hit something above, stop ascending. isJump is set to false after else case 
-            //}
             // Count down jump timer
             jumpTimer--;
             // Stop jumping?
