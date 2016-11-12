@@ -60,12 +60,16 @@ public class DuckController : MonoBehaviour, IDamageable {
     //The resource for the duckShot to be instanciated
     UnityEngine.Object duckShotResource;
 
+    Animator animator;
+
 	// Use this for initialization
 	void Start () {
         collider = GetComponent<BoxCollider2D>();
-        //LevelInfo li = GameObject.Find("LevelInfo").GetComponent<LevelInfo>();
-        //seaLevel = li.seaLevel;
-        //diveDepth = li.diveDepth;
+        LevelInfo li = GameObject.Find("LevelInfo").GetComponent<LevelInfo>();
+        seaLevel = li.seaLevel;
+        diveDepth = li.diveDepth;
+
+        animator = gameObject.GetComponent<Animator>();
 
         duckShotResource = Resources.Load("DuckShot");
 
@@ -227,6 +231,7 @@ public class DuckController : MonoBehaviour, IDamageable {
                 keepDiving = true;
                 if (!inDiving) {
                     StartCoroutine(DivingRoutine(diveDepth,new Vector3((float)horizontalSpeed,(float)verticalSpeed,0)));
+                    animator.SetBool("isDiving", true);
                     inDiving = true;
                 }
             }
@@ -245,6 +250,7 @@ public class DuckController : MonoBehaviour, IDamageable {
         }
         else {
             if (Input.GetAxisRaw("Fire1")  <= 0) {
+                animator.SetBool("isDiving", false);
                 keepDiving = false;
             }
         }
