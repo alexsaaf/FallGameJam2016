@@ -6,4 +6,5 @@ public class LevelInfo : MonoBehaviour {
 
     public float seaLevel;
 
+    public float diveDepth;
 }
