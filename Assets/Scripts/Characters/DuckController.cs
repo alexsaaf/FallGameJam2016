@@ -262,7 +262,7 @@ public class DuckController : MonoBehaviour, IDamageable {
                     crabTransform = rh.collider.transform;
                     CrabController cc = crabTransform.GetComponent<CrabController>();
                     cc.enabled = false;
-                    CircleCollider2D circlC = crabTransform.GetComponent<CircleCollider2D>();
+                    BoxCollider2D circlC = crabTransform.GetComponent<BoxCollider2D>();
                     circlC.enabled = false;
                     Debug.Log("Doing the GRAB FFS");
                     crabCaught = true;
@@ -297,7 +297,7 @@ public class DuckController : MonoBehaviour, IDamageable {
             crabButtonTimer = crabButtonCoolDown;
             CrabController cc = crabTransform.GetComponent<CrabController>();
             cc.enabled = true;
-            CircleCollider2D circlC = crabTransform.GetComponent<CircleCollider2D>();
+            BoxCollider2D circlC = crabTransform.GetComponent<BoxCollider2D>();
             circlC.enabled = true;
         }
         crabCaught = false;
