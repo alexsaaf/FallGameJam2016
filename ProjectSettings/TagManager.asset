@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Crab
   - Enemy
+  - Duck
   layers:
   - Default
   - TransparentFX

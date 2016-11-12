@@ -21,7 +21,7 @@ GameObject:
   - 4: {fileID: 4000011339357722}
   - 212: {fileID: 212000010819612810}
   - 114: {fileID: 114000012271772168}
-  - 58: {fileID: 58000012821226110}
+  - 61: {fileID: 61000010792441704}
   m_Layer: 8
   m_Name: CrabCharacter
   m_TagString: Crab
@@ -42,8 +42,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!58 &58000012821226110
-CircleCollider2D:
+--- !u!61 &61000010792441704
+BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -55,7 +55,7 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.1
+  m_Size: {x: 1.23, y: 0.935}
 --- !u!114 &114000012271772168
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -72,8 +72,8 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 4294967039
-  numLives: 0
-  maxLives: 0
+  numLives: 3
+  maxLives: 3
   minJumpDuration: 7
   maxJumpDuration: 30
 --- !u!212 &212000010819612810
@@ -105,7 +105,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 139b37e8a3541b843aeb11c92f66c642, type: 3}
   m_Color: {r: 0.7794118, g: 0.17192905, b: 0.17192905, a: 1}
   m_FlipX: 0
   m_FlipY: 0
