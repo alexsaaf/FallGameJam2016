@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 enum RayDirectionSearch {
     UP,
@@ -8,7 +9,7 @@ enum RayDirectionSearch {
     DOWN
 }
 
-public class DuckController : MonoBehaviour {
+public class DuckController : MonoBehaviour, IDamageable {
     //The vertical-movementspeed for the duck
     [SerializeField, Range(0, 10),Tooltip("The movement in the y-axel.")]
     double verticalSpeed = 5;
@@ -19,11 +20,24 @@ public class DuckController : MonoBehaviour {
     //The life of the Duck
     public int numLives = 3;
 
+    //Duck shot timer
+    int shotCoolDown = 0;
+    [SerializeField,Range(5,50),Tooltip("The number of frames the shot will be on cooldown.")]
+    int shotDisableFrames = 10;
+
     //A timer for invincibility
     int invincTimer = 0;
     [SerializeField, Range(0, 50), Tooltip("The number of frames the duck should be invincible")]
     int invincibleFrames = 10;
 
+    //The position of the grabes Crab
+    Transform crabPos;
+    bool crabCaught = false;
+    Transform crabTransform = null;
+    int crabButtonTimer = 0;
+    int crabButtonCoolDown = 10;
+    int crabCaughtTimer = 0;
+    int crabCaughtMaxHoldTime = 400;
     //A collision-Mast to mask out the duck from the raycasting
     public LayerMask collisionMask;
 
@@ -36,13 +50,15 @@ public class DuckController : MonoBehaviour {
     bool inDiving = false;
 
     //The distance that the duck can dive into the sea.
-    float diveDepth = 2;
+    float diveDepth = 3;
 
     bool keepDiving = false;
     bool rising = false;
     [SerializeField, Range(1, 30), Tooltip("The number of iterations that the duck will keep the depth of the dive to thes rise")]
     int downTime = 5;
 
+    //The resource for the duckShot to be instanciated
+    UnityEngine.Object duckShotResource;
 
 	// Use this for initialization
 	void Start () {
@@ -50,7 +66,12 @@ public class DuckController : MonoBehaviour {
         //LevelInfo li = GameObject.Find("LevelInfo").GetComponent<LevelInfo>();
         //seaLevel = li.seaLevel;
         //diveDepth = li.diveDepth;
-	}
+
+        duckShotResource = Resources.Load("DuckShot");
+
+        crabPos = transform.FindChild("CrabPos");
+        Debug.Log(crabPos);
+    }
 
     /// <summary>
     /// This method retuns a vector of  direction that was gien and given the speed it returns a vetor to move in that direction
@@ -62,26 +83,48 @@ public class DuckController : MonoBehaviour {
     /// <param name="vs">This is the vertical speed, to move with</param>
     /// <param name="hs">This is the horizontal speed to move with</param>
     /// <param name="tf">This is the transform of the object</param>
+    /// <param name="useDeltaTime">If the ditance should be miltuplied by deltaTime</param>
     /// <returns>Returns a vector of the max movement vector (gievn deltaTime) to translate to</returns>
-    private Vector3 CalculateMoveVectorCollision(int rayCount, RayDirectionSearch direction, Bounds bounds, float vs, float hs, Transform tf) {
+    private Vector3 CalculateMoveVectorCollision(int rayCount, RayDirectionSearch direction, Bounds bounds, float vs, float hs, Transform tf,bool useDeltaTime = true) {
         float distance;
+        Vector3 rayDirection, rayJump, startPos;
+        CalculateNecesaryValues(rayCount, direction, bounds, vs, hs, tf, useDeltaTime, out distance, out rayDirection, out rayJump, out startPos);
+        Vector3 moveVector;
+        RaycastHit2D tmp;
+        DoRaycast(rayCount, direction, distance, rayDirection, rayJump, startPos, out moveVector, out tmp);
+        if (tmp.collider != null) {
+            OnCollision(tmp);
+        }
+        return moveVector;
+    }
+
+    private static void CalculateNecesaryValues(int rayCount, RayDirectionSearch direction, Bounds bounds, float vs, float hs, Transform tf, bool useDeltaTime, out float distance, out Vector3 rayDirection, out Vector3 rayJump, out Vector3 startPos) {
         float jumpLength;
         Vector3 startPosOffset = Vector3.zero;
         float percentOffset = 0.02f;
         // calculate the jumpdistance dpending on the number of rays and direktion
         if (direction == RayDirectionSearch.DOWN || direction == RayDirectionSearch.UP) {
-            jumpLength = (float)(bounds.extents.x * 2*(1-percentOffset)) / (rayCount - 1);
-            distance = vs * Time.deltaTime;
-            startPosOffset.x = bounds.extents.x * 2 * (percentOffset/2);
-        } else {
-            jumpLength = (float)(bounds.extents.y * 2*(1-percentOffset)) / (rayCount - 1);
-            distance = hs * Time.deltaTime;
-            startPosOffset.y = bounds.extents.y * 2 * (percentOffset/2);
+            jumpLength = (float)(bounds.extents.x * 2 * (1 - percentOffset)) / (rayCount - 1);
+            if (useDeltaTime) {
+                distance = vs * Time.deltaTime;
+            }
+            else {
+                distance = vs;
+            }
+            startPosOffset.x = bounds.extents.x * 2 * (percentOffset / 2);
+        }
+        else {
+            jumpLength = (float)(bounds.extents.y * 2 * (1 - percentOffset)) / (rayCount - 1);
+            if (useDeltaTime) {
+                distance = hs * Time.deltaTime;
+            }
+            else {
+                distance = hs;
+            }
+            startPosOffset.y = bounds.extents.y * 2 * (percentOffset / 2);
 
         }
-        Vector3 rayDirection;
-        Vector3 rayJump = Vector3.zero;
-        Vector3 startPos;
+        rayJump = Vector3.zero;
         // setup the ray search direktion, a vector for jumping and start position depending on the
         // search direktion
         switch (direction) {
@@ -106,17 +149,27 @@ public class DuckController : MonoBehaviour {
                 startPos = new Vector3(bounds.max.x, bounds.max.y, 0) - startPosOffset;
                 break;
         }
-        Vector3 moveVector = rayDirection * distance;
+    }
+
+    private RaycastHit2D DoRaycast(int rayCount, RayDirectionSearch direction, float distance, Vector3 rayDirection, Vector3 rayJump, Vector3 startPos, out Vector3 moveVector, out RaycastHit2D tmp, string searchTag = null) {
+        RaycastHit2D rch = new RaycastHit2D();
+        moveVector = rayDirection * distance;
         float minDistance = Mathf.Infinity;
-        RaycastHit2D tmp = new RaycastHit2D();
+        tmp = new RaycastHit2D();
         for (int i = 0; i < rayCount; i++) {
-            Debug.DrawRay(startPos, rayDirection, Color.green);
+            Debug.DrawRay(startPos, rayDirection * distance, Color.green);
             RaycastHit2D hit = Physics2D.Raycast(startPos, rayDirection, distance, collisionMask);
             if (hit.collider != null) {
+                if (searchTag != null) {
+                    if (hit.collider.tag.Equals(searchTag)) {
+                        Debug.Log("The tag of the hit target and the tag of the earch: " + hit.collider.tag + " : " + searchTag);
+                        rch = hit;
+                    }
+                }
                 if (direction == RayDirectionSearch.DOWN || direction == RayDirectionSearch.UP) {
                     if (minDistance > hit.distance) {
                         minDistance = hit.distance;
-                        moveVector.y = hit.distance*rayDirection.y;
+                        moveVector.y = hit.distance * rayDirection.y;
                         tmp = hit;
                     }
                 }
@@ -129,10 +182,7 @@ public class DuckController : MonoBehaviour {
             }
             startPos += rayJump;
         }
-        if (tmp.collider != null) {
-            OnCollision(tmp);
-        }
-        return moveVector;
+        return rch;
     }
 
     void FixedUpdate() {
@@ -179,17 +229,79 @@ public class DuckController : MonoBehaviour {
                     StartCoroutine(DivingRoutine(diveDepth,new Vector3((float)horizontalSpeed,(float)verticalSpeed,0)));
                     inDiving = true;
                 }
-            } 
+            }
+            if (Input.GetAxisRaw("Fire2") > 0  && (shotCoolDown == 0)) {
+                GameObject go = Instantiate(duckShotResource) as GameObject;
+                Vector3 tmp = collider.bounds.center;
+                tmp.x = collider.bounds.max.x+go.GetComponent<Collider2D>().bounds.size.x;
+                go.transform.position = tmp;
+                DuckShotController dsc = go.GetComponent<DuckShotController>();
+                dsc.enabled = true;
+                dsc.movementDirection = transform.right;
+                shotCoolDown = shotDisableFrames;
+            }
+            
+
         }
         else {
             if (Input.GetAxisRaw("Fire1")  <= 0) {
                 keepDiving = false;
             }
         }
+        if (Input.GetAxisRaw("Fire3") > 0) {
+            if (!crabCaught && crabButtonTimer == 0) {
+                float distance;
+                Vector3 rayDirection, rayJump, startPos;
+                CalculateNecesaryValues(15, RayDirectionSearch.DOWN, collider.bounds, collider.bounds.size.y, 0, transform, false, out distance, out rayDirection, out rayJump, out startPos);
+                Vector3 moveVector;
+                RaycastHit2D tmp;
+                RaycastHit2D rh = DoRaycast(15, RayDirectionSearch.DOWN, distance, rayDirection, rayJump, startPos, out moveVector, out tmp, "Crab");
+                if (rh.collider != null) {
+                    rh.collider.transform.parent = transform;
+                    rh.collider.transform.position = crabPos.position;
+                    crabTransform = rh.collider.transform;
+                    CrabController cc = crabTransform.GetComponent<CrabController>();
+                    cc.enabled = false;
+                    CircleCollider2D circlC = crabTransform.GetComponent<CircleCollider2D>();
+                    circlC.enabled = false;
+                    Debug.Log("Doing the GRAB FFS");
+                    crabCaught = true;
+                    crabCaughtTimer = crabCaughtMaxHoldTime;
+                }
+                crabButtonTimer = crabButtonCoolDown;
+            }
+            else if (crabButtonTimer == 0) {
+                ReleasCrab();
+            }
+        }
+        if (crabCaught && crabCaughtTimer == 0) {
+            ReleasCrab();
+        }
         if (invincTimer > 0) {
-            invincTimer -= 1;
+            invincTimer--;
+        }
+        if (shotCoolDown > 0) {
+            shotCoolDown--;
+        }
+        if (crabButtonTimer > 0) {
+            crabButtonTimer--;
+        }
+        if (crabCaughtTimer > 0) {
+            crabCaughtTimer--;
         }
 	}
+
+    private void ReleasCrab() {
+        if (crabTransform != null) {
+            crabTransform.parent = null;
+            crabButtonTimer = crabButtonCoolDown;
+            CrabController cc = crabTransform.GetComponent<CrabController>();
+            cc.enabled = true;
+            CircleCollider2D circlC = crabTransform.GetComponent<CircleCollider2D>();
+            circlC.enabled = true;
+        }
+        crabCaught = false;
+    }
 
     IEnumerator DivingRoutine(float _diveDepth, Vector3 diveSpeed) {
         while (keepDiving && !rising) {
@@ -231,9 +343,9 @@ public class DuckController : MonoBehaviour {
         Debug.Log("OnCollisionEnter triggerd.");
     }
 
-    void TakeDamage(int dmg) {
+    public void TakeDamage(int damage) {
         if (invincTimer == 0) {
-            int tmp = numLives - dmg;
+            int tmp = numLives - damage;
             if (tmp < 1) {
                 numLives = 0;
                 GameManager.instance.Died(false);
