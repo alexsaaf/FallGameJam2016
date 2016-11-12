@@ -7,7 +7,7 @@ using System.Collections;
  */
 public class TestEnemy1Controller : MonoBehaviour {
 
-    public int damage = 3;
+    public int damage = 1;
     public float xSpeed = 5f;
     public LayerMask collisionMask;
     // Raycasting horizontally from the corners was problematic, as it registered collision with the ground
@@ -39,11 +39,20 @@ public class TestEnemy1Controller : MonoBehaviour {
             dirX, xSpeed * Time.deltaTime, collisionMask);
         RaycastHit2D hitInfoXBottom = Physics2D.Raycast(new Vector2(rayOriginX, transform.position.y - (height - xRaycastMargin)),
             dirX, xSpeed * Time.deltaTime, collisionMask);
-        Debug.DrawRay(new Vector2(rayOriginX, transform.position.y + (height - xRaycastMargin)), dirX * xSpeed * Time.deltaTime);
-        Debug.DrawRay(new Vector2(rayOriginX, transform.position.y - (height - xRaycastMargin)), dirX * xSpeed * Time.deltaTime);
         if (hitInfoXTop || hitInfoXBottom) {
             transform.Translate(hitInfoXTop.distance * Time.deltaTime * currentDirection, 0, 0);
             currentDirection *= -1;
+            // If colliding with the crab
+            if (hitInfoXTop.collider != null) {
+                if (hitInfoXTop.collider.tag == "Crab") {
+                    hitInfoXTop.collider.GetComponent<CrabController>().TakeDamage(damage);
+                }
+            }
+            if (hitInfoXBottom.collider != null) {
+                if (hitInfoXBottom.collider.tag == "Crab") {
+                    hitInfoXBottom.collider.GetComponent<CrabController>().TakeDamage(damage);
+                }
+            } 
         } else {
             transform.Translate(xSpeed * Time.deltaTime * currentDirection, 0, 0);
         }

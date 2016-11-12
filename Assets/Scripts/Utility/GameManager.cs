@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour {
     //Instance used for quick access to the GameManager
     public static GameManager instance;
 
+    //The timepoint that the level started
+    public float startTime;
+
     //The fader used to fade between scenes
     SceneFader fader;
 
@@ -53,6 +56,7 @@ public class GameManager : MonoBehaviour {
 
     //Called by character when they die.
     public void Died(bool _crabDied) {
+        result.time = Time.time - startTime;        
         result.crabDied = _crabDied;
         result.levelIndex = SceneManager.GetActiveScene().buildIndex;
         LoadLevel(1);
@@ -79,6 +83,7 @@ public class GameManager : MonoBehaviour {
 
 
     void OnLevelWasLoaded() {
+        startTime = Time.time;
         LevelInfo info = GameObject.Find("LevelInfo").GetComponent<LevelInfo>();
         //Log if there is no levelinfo. Not necessarily a problem.
         if(info == null) {
