@@ -65,9 +65,9 @@ public class DuckController : MonoBehaviour, IDamageable {
 	// Use this for initialization
 	void Start () {
         collider = GetComponent<BoxCollider2D>();
-        LevelInfo li = GameObject.Find("LevelInfo").GetComponent<LevelInfo>();
-        seaLevel = li.seaLevel;
-        diveDepth = li.diveDepth;
+       // LevelInfo li = GameObject.Find("LevelInfo").GetComponent<LevelInfo>();
+        //seaLevel = li.seaLevel;
+        //diveDepth = li.diveDepth;
 
         animator = gameObject.GetComponent<Animator>();
 
