@@ -62,6 +62,12 @@ public class GameManager : MonoBehaviour {
         LoadLevel(1);
     }
 
+    public void Won() {
+        result.time = Time.time - startTime;
+        result.levelIndex = SceneManager.GetActiveScene().buildIndex;
+        LoadLevel(2);
+    }
+
     //Loads the level after this one in the build settings
     //DEPRECATED: Will most likely not be used at all.
     public void LoadNextLevel() {
