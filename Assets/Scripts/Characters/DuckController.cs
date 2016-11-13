@@ -23,7 +23,7 @@ public class DuckController : MonoBehaviour, IDamageable {
     //Duck shot timer
     int shotCoolDown = 0;
     [SerializeField,Range(5,50),Tooltip("The number of frames the shot will be on cooldown.")]
-    int shotDisableFrames = 10;
+    int shotDisableFrames = 20;
 
     //A timer for invincibility
     int invincTimer = 0;
