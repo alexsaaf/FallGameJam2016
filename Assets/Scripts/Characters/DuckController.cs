@@ -23,6 +23,9 @@ public class DuckController : MonoBehaviour, IDamageable {
     //The effect to play when Swooshing (tm)
     public GameObject swooshEffect;
 
+    //The shooting sound
+    AudioSource pewSound;
+
     //Duck shot timer
     int shotCoolDown = 0;
     [SerializeField,Range(5,50),Tooltip("The number of frames the shot will be on cooldown.")]
@@ -70,6 +73,7 @@ public class DuckController : MonoBehaviour, IDamageable {
         diveDepth = li.diveDepth;
 
         animator = gameObject.GetComponent<Animator>();
+        pewSound = gameObject.GetComponent<AudioSource>();
 
         duckShotResource = Resources.Load("DuckShot");
 
@@ -240,6 +244,9 @@ public class DuckController : MonoBehaviour, IDamageable {
                 }
             }
             if (Input.GetAxisRaw("Fire2") > 0  && (shotCoolDown == 0)) {
+                if (pewSound != null) {
+                    pewSound.Play();
+                }
                 GameObject go = Instantiate(duckShotResource) as GameObject;
                 Vector3 tmp = collider.bounds.center;
                 tmp.x = collider.bounds.max.x+go.GetComponent<Collider2D>().bounds.size.x;

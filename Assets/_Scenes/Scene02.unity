@@ -382,15 +382,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 114000010325840494, guid: 75793e432e67fa845a9d3dfcd4bdf70a,
-        type: 2}
-      propertyPath: numLives
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1000010621647186, guid: 75793e432e67fa845a9d3dfcd4bdf70a, type: 2}
-      propertyPath: m_TagString
-      value: Duck
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 75793e432e67fa845a9d3dfcd4bdf70a, type: 2}
   m_IsPrefabParent: 0

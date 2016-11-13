@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b3a6945c1143f54db4a98dfda3b88f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundEffect: {fileID: 0}
+  soundEffect: {fileID: 8300000, guid: 00e85a01af79ee1419cb322d4656d82e, type: 3}
   activeTime: 1
   goalScale: {x: 0.6, y: 0.6}
 --- !u!212 &212000012230673324
