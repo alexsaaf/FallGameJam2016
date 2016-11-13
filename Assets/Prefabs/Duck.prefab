@@ -135,6 +135,8 @@ MonoBehaviour:
   verticalSpeed: 5
   horizontalSpeed: 5
   numLives: 3
+  swooshEffect: {fileID: 1000012379302056, guid: 1d6f0ea60d419f146aa9449582167c91,
+    type: 2}
   shotDisableFrames: 10
   invincibleFrames: 10
   collisionMask:

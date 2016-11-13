@@ -76,7 +76,7 @@ MonoBehaviour:
   maxLives: 3
   rayOriginOffset: 0.01
   minJumpDuration: 7
-  maxJumpDuration: 12
+  maxJumpDuration: 20
 --- !u!212 &212000010819612810
 SpriteRenderer:
   m_ObjectHideFlags: 1

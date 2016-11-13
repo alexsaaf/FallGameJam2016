@@ -87,6 +87,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horizontalSpeed: -5
   moveVector: {x: 1, y: 0, z: 0}
+  deathEffect: {fileID: 1000013831859590, guid: 5f4c28ac79fef33439050ec17b44b3e5,
+    type: 2}
   numLive: 1
 --- !u!212 &212000014267082896
 SpriteRenderer:

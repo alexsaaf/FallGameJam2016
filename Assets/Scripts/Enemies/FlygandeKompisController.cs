@@ -10,6 +10,7 @@ public class FlygandeKompisController : MonoBehaviour, IDamageable {
 
    public  Vector3 moveVector = Vector3.right;
 
+    public GameObject deathEffect;
 
     //the number of lives
     public int numLive = 1;
@@ -30,11 +31,13 @@ public class FlygandeKompisController : MonoBehaviour, IDamageable {
             IDamageable idmg = coll.collider.transform.GetComponent<IDamageable>();
             idmg.TakeDamage(1);
         }
+        Instantiate(deathEffect, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 
     public void TakeDamage(int damage) {
         if (--numLive < 1) {
+            Instantiate(deathEffect, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }
