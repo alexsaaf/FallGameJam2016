@@ -12,8 +12,8 @@ public class Goal : MonoBehaviour {
 	
 	}
 
-    void OnCollisionEnter2D(Collision2D colli) {
-        if(colli.collider.tag == "Crab" || colli.collider.tag == "Duck") {
+    void OnTriggerEnter2D(Collider2D colli) {
+        if(colli.tag == "Crab" || colli.tag == "Duck") {
             GameManager.instance.Won();
         }
 
