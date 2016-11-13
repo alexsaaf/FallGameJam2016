@@ -22,7 +22,7 @@ GameObject:
   - 212: {fileID: 212000012675026848}
   - 61: {fileID: 61000013031044872}
   m_Layer: 0
-  m_Name: Corals 1
+  m_Name: Corals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
