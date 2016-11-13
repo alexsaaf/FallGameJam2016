@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour {
         result.levelIndex = SceneManager.GetActiveScene().buildIndex;
         LoadLevel(1);
     }
-
+    
     public void Won() {
         result.time = Time.time - startTime;
         result.levelIndex = SceneManager.GetActiveScene().buildIndex;
@@ -98,6 +98,10 @@ public class GameManager : MonoBehaviour {
         //Log if there is no levelinfo. Not necessarily a problem.
         if(info == null) {
             Debug.Log("There is no levelinfo in this level!");
+            if (audioSource.clip != defaultMusic) {
+                audioSource.clip = defaultMusic;
+                audioSource.Play();
+            }
         } else {
             //If there is music for the level, play it
             if(info.levelMusic != null) {

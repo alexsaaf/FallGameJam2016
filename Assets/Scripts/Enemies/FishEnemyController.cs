@@ -11,6 +11,7 @@ public class FishEnemyController : MonoBehaviour {
     private float width, height;
     private int damage = 1;
 
+    public GameObject kapow;
 
     void Start () {
         yStartPosition = transform.position.y;
@@ -36,6 +37,7 @@ public class FishEnemyController : MonoBehaviour {
         if (other.tag == "Crab" || other.tag == "Duck") {
             other.GetComponent<IDamageable>().TakeDamage(damage);
         }
+        
     }
 
 

@@ -8,11 +8,11 @@ public class CrabController : MonoBehaviour, IDamageable {
     private float width, height; // The width/height of the BoxCollider2D
     public int numLives = 3;
     public int maxLives;
-    private int invincibilityTimer;
     private int maxInvincibilityFrames = 20;
     private int xDirection = 1;
     [Tooltip ("Must be positive, should probably be approximately 0.01")]
     public float rayOriginOffset; // An offset for the raycasts that check for collisions
+    private Invincibility invincibility;
 
     // ----- JUMP RELATED VARIABLES -----
     private bool isJumping = false; // Is the crab currently rising from the jump?
@@ -23,14 +23,14 @@ public class CrabController : MonoBehaviour, IDamageable {
     void Start() {
         width = transform.localScale.x * GetComponent<BoxCollider2D>().size.x;
         height = transform.localScale.y * GetComponent<BoxCollider2D>().size.y;
+        invincibility = new Invincibility(GetComponent<SpriteRenderer>());
     }
 	
 	void Update () {
         // Move left or right
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow)) {
+        if (Input.GetAxisRaw("CrabHorizontal") != 0) {
             // Set direction depending on left or right
-            if (Input.GetKey(KeyCode.RightArrow)) xDirection = 1;
-            if (Input.GetKey(KeyCode.LeftArrow)) xDirection = -1;
+            xDirection = (int) Input.GetAxisRaw("CrabHorizontal");
             // Directional vector
             Vector2 dir = transform.TransformDirection(Vector2.right) * xDirection;
             float rayOriginX = transform.position.x + (width / 2) * xDirection;
@@ -51,14 +51,14 @@ public class CrabController : MonoBehaviour, IDamageable {
             transform.Translate(xDirection * moveDistance, 0, 0);
         }
         // Jump
-        if (Input.GetKey(KeyCode.UpArrow)) {
+        if (Input.GetButton("CrabJump")) {
             if (!isJumping && OnGround()) {
                 isJumping = true;
                 jumpTimer = maxJumpDuration;
             }
         }
         // If the player releases the jump button, stop the jump
-        if (Input.GetKeyUp(KeyCode.UpArrow)) { 
+        if (Input.GetButtonUp("CrabJump")) { 
             if (jumpTimer <= minJumpDuration) {
                 isJumping = false;
                 jumpTimer = 0;
@@ -112,9 +112,7 @@ public class CrabController : MonoBehaviour, IDamageable {
                 isJumping = false;
             }
         }
-        if (invincibilityTimer > 0) {
-            invincibilityTimer--;
-        }
+        invincibility.Update();
     }
 
     /**
@@ -128,9 +126,9 @@ public class CrabController : MonoBehaviour, IDamageable {
     }
 
     public void TakeDamage(int damage) {
-        if (invincibilityTimer <= 0) {
+        if (!invincibility.isInvincible()) {
             numLives--;
-            invincibilityTimer = maxInvincibilityFrames;
+            invincibility.ActivateInvincibility();
         }
         if (numLives <= 0) {
             GameManager.instance.Died(true);

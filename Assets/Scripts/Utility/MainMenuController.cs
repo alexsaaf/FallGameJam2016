@@ -7,4 +7,10 @@ public class MainMenuController : MonoBehaviour {
         GameManager.instance.LoadLevel(3);
     }
 
+    void Update() {
+        if (Input.GetButtonDown("Fire1") || Input.GetButtonDown("CrabJump")) {
+            StartGame();
+        }
+    }
+
 }
