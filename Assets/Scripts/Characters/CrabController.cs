@@ -8,11 +8,11 @@ public class CrabController : MonoBehaviour, IDamageable {
     private float width, height; // The width/height of the BoxCollider2D
     public int numLives = 3;
     public int maxLives;
-    private int invincibilityTimer;
     private int maxInvincibilityFrames = 20;
     private int xDirection = 1;
     [Tooltip ("Must be positive, should probably be approximately 0.01")]
     public float rayOriginOffset; // An offset for the raycasts that check for collisions
+    private Invincibility invincibility;
 
     // ----- JUMP RELATED VARIABLES -----
     private bool isJumping = false; // Is the crab currently rising from the jump?
@@ -23,6 +23,7 @@ public class CrabController : MonoBehaviour, IDamageable {
     void Start() {
         width = transform.localScale.x * GetComponent<BoxCollider2D>().size.x;
         height = transform.localScale.y * GetComponent<BoxCollider2D>().size.y;
+        invincibility = new Invincibility(GetComponent<SpriteRenderer>());
     }
 	
 	void Update () {
@@ -112,9 +113,7 @@ public class CrabController : MonoBehaviour, IDamageable {
                 isJumping = false;
             }
         }
-        if (invincibilityTimer > 0) {
-            invincibilityTimer--;
-        }
+        invincibility.Update();
     }
 
     /**
@@ -128,9 +127,9 @@ public class CrabController : MonoBehaviour, IDamageable {
     }
 
     public void TakeDamage(int damage) {
-        if (invincibilityTimer <= 0) {
+        if (!invincibility.isInvincible()) {
             numLives--;
-            invincibilityTimer = maxInvincibilityFrames;
+            invincibility.ActivateInvincibility();
         }
         if (numLives <= 0) {
             GameManager.instance.Died(true);
