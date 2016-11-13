@@ -1570,16 +1570,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 114000012271772168, guid: 1755b97a411228940bec7bc6186c40f1,
-        type: 2}
-      propertyPath: minJumpDuration
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000012271772168, guid: 1755b97a411228940bec7bc6186c40f1,
-        type: 2}
-      propertyPath: maxJumpDuration
-      value: 12
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1755b97a411228940bec7bc6186c40f1, type: 2}
   m_IsPrefabParent: 0
