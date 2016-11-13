@@ -11,6 +11,8 @@ public class CrabController : MonoBehaviour, IDamageable {
     private int invincibilityTimer;
     private int maxInvincibilityFrames = 20;
     private int xDirection = 1;
+    [Tooltip ("Must be positive, should probably be approximately 0.01")]
+    public float rayOriginOffset; // An offset for the raycasts that check for collisions
 
     // ----- JUMP RELATED VARIABLES -----
     private bool isJumping = false; // Is the crab currently rising from the jump?
@@ -33,15 +35,15 @@ public class CrabController : MonoBehaviour, IDamageable {
             Vector2 dir = transform.TransformDirection(Vector2.right) * xDirection;
             float rayOriginX = transform.position.x + (width / 2) * xDirection;
             // Raycast to from corners to left or right, depending on the value of xDirection
-            RaycastHit2D hitInfoTop = Physics2D.Raycast(new Vector2(rayOriginX, transform.position.y + height / 2),
+            RaycastHit2D hitInfoTop = Physics2D.Raycast(new Vector2(rayOriginX, transform.position.y + (height / 2) - rayOriginOffset),
                 dir, xSpeed * Time.deltaTime, collisionMask);
-            RaycastHit2D hitInfoBottom = Physics2D.Raycast(new Vector2(rayOriginX, transform.position.y - height / 2),
+            RaycastHit2D hitInfoBottom = Physics2D.Raycast(new Vector2(rayOriginX, transform.position.y - (height / 2) + rayOriginOffset),
                 dir, xSpeed * Time.deltaTime, collisionMask);
             float moveDistance = 0;
             if (hitInfoBottom) {
-                moveDistance = hitInfoBottom.distance * Time.deltaTime;
+                moveDistance = hitInfoBottom.distance;
             } else if (hitInfoTop) {
-                moveDistance = hitInfoTop.distance * Time.deltaTime;
+                moveDistance = hitInfoTop.distance;
             } else {
                 moveDistance = xSpeed * Time.deltaTime;
             }
@@ -70,15 +72,15 @@ public class CrabController : MonoBehaviour, IDamageable {
             Vector2 down = transform.TransformDirection(Vector2.down);
             float rayOriginY = transform.position.y - (height / 2);
             // Raycast down from the bottom corners of the sprite
-            RaycastHit2D hitInfoLeft = Physics2D.Raycast(new Vector2(transform.position.x - width / 2, rayOriginY),
-                down, xSpeed * Time.deltaTime, collisionMask);
-            RaycastHit2D hitInfoRight = Physics2D.Raycast(new Vector2(transform.position.x + width / 2, rayOriginY),
-                down, xSpeed * Time.deltaTime, collisionMask);
+            RaycastHit2D hitInfoLeft = Physics2D.Raycast(new Vector2(transform.position.x - (width / 2) + rayOriginOffset, rayOriginY),
+                down, ySpeed * Time.deltaTime, collisionMask);
+            RaycastHit2D hitInfoRight = Physics2D.Raycast(new Vector2(transform.position.x + (width / 2) - rayOriginOffset, rayOriginY),
+                down, ySpeed * Time.deltaTime, collisionMask);
             float moveDistance = 0;
             if (hitInfoLeft) {
-                moveDistance = -1 * hitInfoLeft.distance * Time.deltaTime;
+                moveDistance = -1 * hitInfoLeft.distance;
             } else if (hitInfoRight) {
-                moveDistance = -1 * hitInfoRight.distance * Time.deltaTime;
+                moveDistance = -1 * hitInfoRight.distance;
             } else {
                 moveDistance = -1 * ySpeed * Time.deltaTime;
             }
@@ -87,16 +89,16 @@ public class CrabController : MonoBehaviour, IDamageable {
             Vector2 up = transform.TransformDirection(Vector2.up);
             float rayOriginY = transform.position.y + (height / 2);
             // Raycast up from the top corners of the sprite
-            RaycastHit2D hitInfoLeft = Physics2D.Raycast(new Vector2(transform.position.x - width / 2, rayOriginY),
-                up, xSpeed * Time.deltaTime, collisionMask);
-            RaycastHit2D hitInfoRight = Physics2D.Raycast(new Vector2(transform.position.x + width / 2, rayOriginY),
-                up, xSpeed * Time.deltaTime, collisionMask);
+            RaycastHit2D hitInfoLeft = Physics2D.Raycast(new Vector2(transform.position.x - (width / 2) + rayOriginOffset, rayOriginY),
+                up, ySpeed * Time.deltaTime, collisionMask);
+            RaycastHit2D hitInfoRight = Physics2D.Raycast(new Vector2(transform.position.x + (width / 2) - rayOriginOffset, rayOriginY),
+                up, ySpeed * Time.deltaTime, collisionMask);
             float moveDistance = 0;
             if (hitInfoLeft) {
-                moveDistance = hitInfoLeft.distance * Time.deltaTime;
+                moveDistance = hitInfoLeft.distance;
                 jumpTimer = 0;
             } else if (hitInfoRight) {
-                moveDistance = hitInfoRight.distance * Time.deltaTime;
+                moveDistance = hitInfoRight.distance;
                 jumpTimer = 0;
             } else {
                 moveDistance = ySpeed * Time.deltaTime;
@@ -110,7 +112,6 @@ public class CrabController : MonoBehaviour, IDamageable {
                 isJumping = false;
             }
         }
-
         if (invincibilityTimer > 0) {
             invincibilityTimer--;
         }
@@ -121,10 +122,9 @@ public class CrabController : MonoBehaviour, IDamageable {
      */
     private bool OnGround() {
         Vector2 down = transform.TransformDirection(Vector2.down);
-        // Raycast a very small distance straight down from the bottom of the sprite (to compensate for small errors)
         RaycastHit2D hitInfo = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - height / 2),
-            down, 0.065f, collisionMask);
-        return hitInfo;
+            down, 20, collisionMask);
+        return hitInfo.distance < height / 20;
     }
 
     public void TakeDamage(int damage) {
