@@ -20,6 +20,9 @@ public class DuckController : MonoBehaviour, IDamageable {
     //The life of the Duck
     public int numLives = 3;
 
+    //The effect to play when Swooshing (tm)
+    public GameObject swooshEffect;
+
     //Duck shot timer
     int shotCoolDown = 0;
     [SerializeField,Range(5,50),Tooltip("The number of frames the shot will be on cooldown.")]
@@ -314,6 +317,7 @@ public class DuckController : MonoBehaviour, IDamageable {
     }
 
     IEnumerator DivingRoutine(float _diveDepth, Vector3 diveSpeed) {
+        Instantiate(swooshEffect, transform.position, Quaternion.identity);
         while (keepDiving && !rising) {
             Vector3 yMovement = CalculateMoveVectorCollision(3, RayDirectionSearch.DOWN, collider.bounds, diveSpeed.y, diveSpeed.x, transform);
             if (yMovement.y == 0) {
