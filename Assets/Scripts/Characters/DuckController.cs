@@ -28,11 +28,6 @@ public class DuckController : MonoBehaviour, IDamageable {
     [SerializeField,Range(5,50),Tooltip("The number of frames the shot will be on cooldown.")]
     int shotDisableFrames = 20;
 
-    //A timer for invincibility
-    int invincTimer = 0;
-    [SerializeField, Range(0, 50), Tooltip("The number of frames the duck should be invincible")]
-    int invincibleFrames = 10;
-
     //The position of the grabes Crab
     Transform crabPos;
     bool crabCaught = false;
@@ -65,6 +60,8 @@ public class DuckController : MonoBehaviour, IDamageable {
 
     Animator animator;
 
+    private Invincibility invincibility;
+
 	// Use this for initialization
 	void Start () {
         collider = GetComponent<BoxCollider2D>();
@@ -78,6 +75,8 @@ public class DuckController : MonoBehaviour, IDamageable {
 
         crabPos = transform.FindChild("CrabPos");
         Debug.Log(crabPos);
+
+        invincibility = new Invincibility(GetComponent<SpriteRenderer>());
     }
 
     /// <summary>
@@ -290,9 +289,6 @@ public class DuckController : MonoBehaviour, IDamageable {
         if (crabCaught && crabCaughtTimer == 0) {
             ReleasCrab();
         }
-        if (invincTimer > 0) {
-            invincTimer--;
-        }
         if (shotCoolDown > 0) {
             shotCoolDown--;
         }
@@ -302,6 +298,8 @@ public class DuckController : MonoBehaviour, IDamageable {
         if (crabCaughtTimer > 0) {
             crabCaughtTimer--;
         }
+        // Update invincibility counter n' stuff
+        invincibility.Update();
 	}
 
     private void ReleasCrab() {
@@ -359,16 +357,12 @@ public class DuckController : MonoBehaviour, IDamageable {
     }
 
     public void TakeDamage(int damage) {
-        if (invincTimer == 0) {
-            int tmp = numLives - damage;
-            if (tmp < 1) {
-                numLives = 0;
-                GameManager.instance.Died(false);
-            }
-            else {
-                numLives = tmp;
-            }
-            invincTimer = invincibleFrames;
+        if (!invincibility.isInvincible()) {
+            numLives--;
+            invincibility.ActivateInvincibility();
+        }
+        if (numLives <= 0) {
+            GameManager.instance.Died(false);
         }
     }
 }
