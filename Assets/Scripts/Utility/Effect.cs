@@ -19,7 +19,6 @@ public class Effect : MonoBehaviour {
     IEnumerator Transformation() {
         float t = 0;
         while(t < 1) {
-            Debug.Log(t);
             t += Time.deltaTime / activeTime;
             transform.localScale = Vector2.Lerp(startScale, goalScale, t);
             yield return null;

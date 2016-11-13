@@ -19,6 +19,15 @@ public class FailedScreenController : MonoBehaviour {
         }
 	}
 
+    void Update() {
+        if (Input.GetButtonDown("Fire1") || Input.GetButtonDown("CrabJump")) {
+            RestartLevel();
+        }
+        if (Input.GetButtonDown("Fire2") || Input.GetButtonDown("CrabBack")) {
+            ToMainMenu();
+        }
+    }
+
     public void RestartLevel() {
         GameManager.instance.LoadLevel(GameManager.instance.result.levelIndex);
     }
