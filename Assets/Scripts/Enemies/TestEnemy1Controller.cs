@@ -16,11 +16,14 @@ public class TestEnemy1Controller : MonoBehaviour {
     private float verticalCheckLength;
     private int currentDirection = -1; // Start walking left, set to 1 to go right
     private float width, height;
+    private SpriteRenderer spriteRenderer;
+
 
     void Start() {
         width = transform.localScale.x * GetComponent<BoxCollider2D>().size.x;
         height = transform.localScale.y * GetComponent<BoxCollider2D>().size.y;
-        verticalCheckLength = height / 2;
+        verticalCheckLength = height / 10;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
 	void Update () {
@@ -42,6 +45,7 @@ public class TestEnemy1Controller : MonoBehaviour {
         if (hitInfoXTop || hitInfoXBottom) {
             transform.Translate(hitInfoXTop.distance * Time.deltaTime * currentDirection, 0, 0);
             currentDirection *= -1;
+            spriteRenderer.flipX = !spriteRenderer.flipX;
             // If colliding with the crab
             if (hitInfoXTop.collider != null) {
                 if (hitInfoXTop.collider.tag == "Crab") {
@@ -68,8 +72,10 @@ public class TestEnemy1Controller : MonoBehaviour {
             down, verticalCheckLength, collisionMask);
         RaycastHit2D hitInfoYRight = Physics2D.Raycast(new Vector2(transform.position.x + width / 2, rayOriginY),
             down, verticalCheckLength, collisionMask);
-        if (!(hitInfoYLeft || hitInfoYRight)) {
+
+        if (!hitInfoYLeft || !hitInfoYRight) {
             currentDirection *= -1;
+            spriteRenderer.flipX = !spriteRenderer.flipX;
         } 
     }
 }
