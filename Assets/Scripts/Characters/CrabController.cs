@@ -30,7 +30,7 @@ public class CrabController : MonoBehaviour, IDamageable {
         // Move left or right
         if (Input.GetAxisRaw("CrabHorizontal") != 0) {
             // Set direction depending on left or right
-            xDirection = (int) Input.GetAxisRaw("CrabHorizontal");
+            xDirection = (int) Mathf.Sign(Input.GetAxisRaw("CrabHorizontal"));
             // Directional vector
             Vector2 dir = transform.TransformDirection(Vector2.right) * xDirection;
             float rayOriginX = transform.position.x + (width / 2) * xDirection;

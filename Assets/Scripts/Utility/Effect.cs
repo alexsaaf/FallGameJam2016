@@ -10,7 +10,7 @@ public class Effect : MonoBehaviour {
 
 	void Start () {
 	    if(soundEffect != null) {
-            AudioSource.PlayClipAtPoint(soundEffect, Vector2.zero,1);
+            AudioSource.PlayClipAtPoint(soundEffect, transform.position,1);
         }
         startScale = transform.localScale;
         StartCoroutine("Transformation");
